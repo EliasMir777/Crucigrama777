@@ -3,119 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crucigrama: México (1945-1970)</title>
+    <title>Reto Histórico: México 1945-1970</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        h1 { color: #2c3e50; }
-        .container { display: flex; gap: 40px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .grid { display: grid; grid-template-columns: repeat(12, 35px); grid-template-rows: repeat(12, 35px); gap: 2px; background: #bdc3c7; border: 2px solid #2c3e50; }
-        .cell { width: 35px; height: 35px; background: white; position: relative; }
-        .cell.black { background: #2c3e50; }
-        .cell input { width: 100%; height: 100%; border: none; text-align: center; font-size: 18px; font-weight: bold; text-transform: uppercase; outline: none; }
-        .cell span { position: absolute; top: 2px; left: 2px; font-size: 10px; color: #7f8c8d; pointer-events: none; }
-        .clues { max-width: 400px; }
-        h3 { color: #e67e22; border-bottom: 2px solid #e67e22; padding-bottom: 5px; }
-        li { margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
-        .btn { margin-top: 20px; padding: 10px 25px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn:hover { background: #2ecc71; }
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --bg: #ecf0f1;
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg); 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: var(--primary); margin-bottom: 10px; text-align: center; }
+        .description { color: #7f8c8d; margin-bottom: 20px; text-align: center; max-width: 600px; }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Contenedor del Crucigrama */
+        .grid-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(10, 40px); 
+            grid-template-rows: repeat(10, 40px); 
+            gap: 2px; 
+            background: #bdc3c7; 
+            border: 4px solid var(--primary);
+        }
+
+        .cell { 
+            width: 40px; 
+            height: 40px; 
+            background: #34495e; /* Color para celdas vacías */
+            position: relative; 
+        }
+
+        .cell.active { background: white; }
+
+        .cell input { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            text-align: center; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            outline: none; 
+            background: transparent;
+        }
+
+        .cell span { 
+            position: absolute; 
+            top: 1px; 
+            left: 2px; 
+            font-size: 11px; 
+            color: var(--accent); 
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* Pistas */
+        .clues-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+
+        h3 { color: var(--accent); border-bottom: 2px solid var(--bg); padding-bottom: 5px; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 12px; font-size: 14px; color: var(--primary); }
+        li b { color: var(--accent); }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+
+        .btn-check { background: var(--success); }
+        .btn-hint { background: var(--primary); }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @media (max-width: 500px) {
+            .grid { 
+                grid-template-columns: repeat(10, 32px); 
+                grid-template-rows: repeat(10, 32px); 
+            }
+            .cell { width: 32px; height: 32px; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Crucigrama: México (1945 - 1970)</h1>
-    <p>Completa los conceptos clave del crecimiento y soberanía mexicana.</p>
+    <h1>México (1945 - 1970)</h1>
+    <p class="description">Completa el crucigrama sobre el "Milagro Mexicano" y la soberanía nacional.</p>
 
-    <div class="container">
-        <!-- El tablero se genera con JS para mayor facilidad -->
-        <div id="crossword" class="grid"></div>
+    <div class="main-container">
+        <div class="grid-wrapper">
+            <div id="crossword" class="grid"></div>
+        </div>
 
-        <div class="clues">
+        <div class="clues-container">
             <h3>Horizontales</h3>
             <ul>
-                <li><strong>2.</strong> Apellido del presidente que nacionalizó la industria eléctrica en 1960.</li>
-                <li><strong>4.</strong> Modelo económico conocido como el "______ Mexicano".</li>
-                <li><strong>5.</strong> Institución cultural fundada en 1946 (Siglas).</li>
+                <li><b>1.</b> Siglas del instituto de arte fundado en 1946.</li>
+                <li><b>2.</b> Apellido del presidente que nacionalizó la luz (1960).</li>
+                <li><b>3.</b> El "_________ Mexicano": época de gran crecimiento.</li>
             </ul>
             <h3>Verticales</h3>
             <ul>
-                <li><strong>1.</strong> Ciudad sede de las Olimpiadas de 1968.</li>
-                <li><strong>2.</strong> Derecho obtenido por las mujeres en 1953.</li>
-                <li><strong>3.</strong> Principal recurso energético nacionalizado (1938) que sostuvo la economía en este periodo.</li>
+                <li><b>4.</b> Recurso clave nacionalizado que impulsó al país.</li>
+                <li><b>5.</b> Ciudad de los Juegos Olímpicos de 1968.</li>
+                <li><b>6.</b> Las mujeres obtuvieron este derecho en 1953.</li>
             </ul>
         </div>
     </div>
 
-    <button class="btn" onclick="checkAnswers()">Verificar Resultados</button>
+    <div class="controls">
+        <button class="btn btn-hint" onclick="giveHint()">Pista</button>
+        <button class="btn btn-check" onclick="checkAnswers()">Revisar</button>
+    </div>
 
     <script>
-        // Mapa del crucigrama (12x12)
-        // H: Horizontal, V: Vertical. [Fila, Columna, Palabra, Número]
-        const layout = [
-            { row: 2, col: 1, word: 'MEXICO', num: 1, dir: 'V' },
-            { row: 2, col: 1, word: 'MADRID', num: 0, dir: 'X' }, // Placeholder
-            { row: 4, col: 1, word: 'VOTO', num: 2, dir: 'V' },
-            { row: 4, col: 1, word: 'VALDEMAR', num: 0, dir: 'X' }, // Ficticio para estructura
-            { row: 4, col: 1, word: 'LOPEZ', num: 2, dir: 'H' },
-            { row: 7, col: 4, word: 'MILAGRO', num: 4, dir: 'H' },
-            { row: 4, col: 8, word: 'PETROLEO', num: 3, dir: 'V' },
-            { row: 10, col: 4, word: 'INBA', num: 5, dir: 'H' }
+        const words = [
+            { word: 'INBA', r: 1, c: 1, dir: 'H', num: 1 },
+            { word: 'LOPEZ', r: 3, c: 1, dir: 'H', num: 2 },
+            { word: 'MILAGRO', r: 6, c: 3, dir: 'H', num: 3 },
+            { word: 'PETROLEO', r: 1, c: 8, dir: 'V', num: 4 },
+            { word: 'MEXICO', r: 1, c: 4, dir: 'V', num: 5 },
+            { word: 'VOTO', r: 3, c: 1, dir: 'V', num: 6 }
         ];
 
         const gridContainer = document.getElementById('crossword');
-        const cells = [];
+        const matrix = Array(10).fill().map(() => Array(10).fill(null));
 
-        // Inicializar cuadrícula vacía (negra)
-        for (let i = 0; i < 144; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'cell black';
-            gridContainer.appendChild(cell);
-            cells.push(cell);
-        }
-
-        // Colocar palabras en la cuadrícula
-        function placeWord(row, col, word, num, dir) {
-            for (let i = 0; i < word.length; i++) {
-                let r = dir === 'H' ? row : row + i;
-                let c = dir === 'H' ? col + i : col;
-                let index = (r * 12) + c;
-                
-                let cell = cells[index];
-                cell.className = 'cell';
-                if (!cell.querySelector('input')) {
-                    const input = document.createElement('input');
-                    input.maxLength = 1;
-                    input.dataset.answer = word[i];
-                    cell.appendChild(input);
-                }
-                if (i === 0 && num > 0) {
-                    const span = document.createElement('span');
-                    span.innerText = num;
-                    cell.appendChild(span);
-                }
+        // Crear celdas visuales
+        for (let r = 0; r < 10; r++) {
+            for (let c = 0; c < 10; c++) {
+                const cellDiv = document.createElement('div');
+                cellDiv.className = 'cell';
+                cellDiv.id = `cell-${r}-${c}`;
+                gridContainer.appendChild(cellDiv);
             }
         }
 
-        // Definir posiciones reales según el diseño deseado
-        placeWord(1, 4, 'MEXICO', 1, 'V');
-        placeWord(3, 2, 'VOTO', 2, 'V');
-        placeWord(3, 2, 'LOPEZ', 2, 'H');
-        placeWord(6, 2, 'MILAGRO', 4, 'H');
-        placeWord(2, 8, 'PETROLEO', 3, 'V');
-        placeWord(9, 5, 'INBA', 5, 'H');
+        // Insertar palabras en la lógica
+        words.forEach(w => {
+            for (let i = 0; i < w.word.length; i++) {
+                let row = w.dir === 'H' ? w.r : w.r + i;
+                let col = w.dir === 'H' ? w.c + i : w.c;
+                
+                const cell = document.getElementById(`cell-${row}-${col}`);
+                cell.classList.add('active');
+                
+                if (!cell.querySelector('input')) {
+                    const input = document.createElement('input');
+                    input.maxLength = 1;
+                    input.dataset.ans = w.word[i];
+                    cell.appendChild(input);
+                }
+
+                if (i === 0) {
+                    const span = document.createElement('span');
+                    span.innerText = w.num;
+                    cell.appendChild(span);
+                }
+            }
+        });
 
         function checkAnswers() {
             const inputs = document.querySelectorAll('input');
-            let correct = true;
+            let win = true;
             inputs.forEach(input => {
-                if (input.value.toUpperCase() === input.dataset.answer) {
-                    input.style.color = "#27ae60";
+                if (input.value.toUpperCase() === input.dataset.ans) {
+                    input.style.color = "var(--success)";
                 } else {
                     input.style.color = "#e74c3c";
-                    correct = false;
+                    win = false;
                 }
             });
-            if (correct) alert("¡Excelente! Conoces muy bien la época del Desarrollo Estabilizador.");
-            else alert("Algunas respuestas son incorrectas. ¡Sigue intentando!");
+            if (win) alert("¡Felicidades! Has completado el crucigrama histórico.");
+        }
+
+        function giveHint() {
+            const inputs = Array.from(document.querySelectorAll('input')).filter(i => i.value === "");
+            if (inputs.length > 0) {
+                const randomInput = inputs[Math.floor(Math.random() * inputs.length)];
+                randomInput.value = randomInput.dataset.ans;
+                randomInput.style.color = "var(--accent)";
+            }
         }
     </script>
 </body>
